@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أجمل الأغاني السودانية 🎵</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:linear-gradient(180deg,#1a1a1a 0%,#000 100%);
+  color:white;min-height:100vh;padding-bottom:100px;
+}
+.container{max-width:1000px;margin:auto;padding:20px;}
+.header{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
+.header h1{font-size:24px;}
+.artist-hero{display:flex;gap:30px;align-items:flex-end;margin-bottom:40px;}
+.artist-image{width:180px;height:180px;border-radius:10px;
+  background:url('https://i.ibb.co/LPBQLJ2/music-bg.jpg') center/cover;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+.artist-info{flex:1;}
+.artist-name{font-size:40px;font-weight:bold;}
+.artist-stats{color:#999;margin:8px 0 20px;}
+.play-button{
+  background:#ff2d55;border:none;color:#fff;padding:12px 30px;
+  border-radius:25px;font-size:16px;cursor:pointer;transition:0.3s;
+}
+.play-button:hover{background:#ff3b30;transform:scale(1.05);}
+.tabs{display:flex;gap:20px;border-bottom:1px solid #333;margin-bottom:20px;}
+.tab{background:none;border:none;color:#999;padding:10px 0;cursor:pointer;position:relative;}
+.tab.active{color:white;}
+.tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#ff2d55;}
+.song-item{
+  display:flex;align-items:center;padding:15px;border-radius:8px;cursor:pointer;transition:0.3s;
+}
+.song-item:hover{background:rgba(255,255,255,0.08);}
+.song-item.playing{background:rgba(255,45,85,0.25);}
+.song-number{width:25px;text-align:center;color:#999;}
+.song-info{flex:1;margin:0 10px;}
+.song-title{font-size:16px;margin-bottom:4px;}
+.song-artist{font-size:14px;color:#aaa;}
+.song-duration{color:#888;}
+.music-player{
+  position:fixed;bottom:0;left:0;right:0;background:rgba(30,30,30,0.95);
+  backdrop-filter:blur(15px);padding:15px 20px;display:flex;
+  align-items:center;justify-content:space-between;gap:20px;
+}
+.player-controls{display:flex;align-items:center;gap:15px;}
+.player-button{background:none;border:none;color:white;font-size:20px;cursor:pointer;}
+.progress-bar{flex:1;}
+.progress{width:100%;height:4px;background:#444;border-radius:2px;overflow:hidden;cursor:pointer;}
+.progress-filled{width:0;height:100%;background:#ff2d55;}
+.current-song{min-width:200px;font-size:14px;}
+@media(max-width:700px){
+  .artist-hero{flex-direction:column;align-items:center;text-align:center;}
+  .music-player{flex-direction:column;gap:10px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <button onclick="history.back()" style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
+    <h1>أجمل الأغاني السودانية</h1>
+  </header>
+
+  <section class="artist-hero">
+    <div class="artist-image"></div>
+    <img src="b.jpeg" width="200px" height="200px" alt="">
+    <div class="artist-info">
+      <h1 class="artist-name">أجمل الأغاني السودانية</h1>
+      <div class="artist-stats">فنان • 1.2M مستمع شهريًا</div>
+      <button class="play-button" id="mainPlayButton"> <a href="https://www.youtube.com/">لم يتم  تشغيل</button>
+    </div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active">الأغاني الشائعة</button>
+    <button class="tab">الألبومات</button>
+    <button class="tab">قوائم التشغيل</button>
+    
+  </nav>
+
+  <section class="songs-list" id="songsList"></section>
+</div>
+
+<footer class="music-player">
+  <div class="player-controls">
+    <button class="player-button" id="prevBtn">⏮</button>
+    <button class="player-button" id="playPauseBtn">▶</button>
+    <button class="player-button" id="nextBtn">⏭</button>
+  </div>
+  <div class="progress-bar">
+    <div class="progress" id="progress">
+      <div class="progress-filled" id="progressFilled"></div>
+    </div>
+  </div>
+  <div class="current-song" id="currentSong">▶
+ 
+</footer>
+
+<script src="home.js">
+   
+const songs = [
+
+  {
+
+    title: "يا حبيبي يا نور العين",
+    artist: "عمرو دياب",
+    duration: "3:45",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  },
+  {
+    title: "يا وينك يا حبيبي",
+    artist: "محمد الأمين",
+    duration: "4:12",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+  },
+  {
+    title: "العيون السود",
+    artist: "وردة الجزائرية",
+    duration: "3:28",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+  }
+];
+
+const songsList = document.getElementById('songsList');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const currentSongLabel = document.getElementById('currentSong');
+const progress = document.getElementById('progress');
+const progressFilled = document.getElementById('progressFilled');
+const mainPlayButton = document.getElementById('mainPlayButton');
+
+let currentIndex = 0;
+let isPlaying = false;
+const audio = new Audio();
+audio.preload = "auto";
+
+
+function loadSongs() {
+  songs.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'song-item';
+    item.dataset.index = i;
+    item.innerHTML = `
+      <div class="song-number">${i+1}</div>
+      <div class="song-info">
+        <div class="song-title">${s.title}</div>
+        <div class="song-artist">${s.artist}</div>
+      </div>
+      <div class="song-duration">${s.duration}</div>
+    `;
+    item.addEventListener('click',()=>playSong(i));
+    songsList.appendChild(item);
+  });
+}
+
+function playSong(index){
+  const song = songs[index];
+  currentIndex = index;
+  document.querySelectorAll('.song-item').forEach(el=>el.classList.remove('playing'));
+  document.querySelector(`.song-item[data-index="${index}"]`).classList.add('playing');
+  audio.src = song.src;
+  audio.play();
+  isPlaying = true;
+  playPauseBtn.textContent = '⏸';
+  mainPlayButton.textContent = '⏸ إيقاف';
+  currentSongLabel.textContent = song.title;
+}
+
+function togglePlayPause(){
+  if(!audio.src){playSong(0);return;}
+  if(isPlaying){
+    audio.pause();
+    isPlaying=false;
+    playPauseBtn.textContent='▶';
+    mainPlayButton.textContent='▶ تشغيل';
+  } else {
+    audio.play();
+    isPlaying=true;
+    playPauseBtn.textContent='⏸';
+    mainPlayButton.textContent='⏸ إيقاف';
+  }
+}
+
+function playNext(){
+  currentIndex = (currentIndex + 1) % songs.length;
+  playSong(currentIndex);
+}
+
+function playPrev(){
+  currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+  playSong(currentIndex);
+}
+
+function updateProgress(){
+  if(audio.duration){
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressFilled.style.width = percent + '%';
+  }
+}
+
+function setProgress(e){
+  const width = this.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audio.duration;
+  audio.currentTime = (clickX / width) * duration;
+}
+
+playPauseBtn.addEventListener('click',togglePlayPause);
+mainPlayButton.addEventListener('click',togglePlayPause);
+nextBtn.addEventListener('click',playNext);
+prevBtn.addEventListener('click',playPrev);
+audio.addEventListener('timeupdate',updateProgress);
+progress.addEventListener('click',setProgress);
+audio.addEventListener('ended',playNext);
+
+loadSongs();
+</script>
+</body>
+</html>
